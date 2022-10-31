@@ -13,7 +13,7 @@ import { CreateuserDialogComponent } from '../createuser-dialog/createuser-dialo
 })
 export class UserListComponent implements OnInit {
 
-  displayedColumns: string[] = ['Nombre', 'Apellido', 'CorreoElectronico', 'FechaNacimiento', 'Telefono', 'Pais', 'Acciones'];
+  displayedColumns: string[] = ['Id', 'Nombre', 'Apellido', 'CorreoElectronico', 'FechaNacimiento', 'Telefono', 'Pais', 'Acciones'];
   dataSource!: UserDTO[];
 
   constructor(private router: Router,
@@ -23,8 +23,14 @@ export class UserListComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.GetUsers().subscribe(e => {
+      debugger
       this.dataSource = e;
     });
+  }
+
+  removeUser(id: any) {
+    debugger
+    this.userService.RemoveUser(id).subscribe();
   }
 
   openDialogToCreateUser(): void {
@@ -33,9 +39,10 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  openDialogToUpdateUser(user: UserDTO): void {
+  openDialogToUpdateUser(user: any): void {
     const dialogRef = this.dialog.open(CreateuserDialogComponent, {
-      width: '300px'
+      width: '300px',
+      data: user
     });
   }
 }

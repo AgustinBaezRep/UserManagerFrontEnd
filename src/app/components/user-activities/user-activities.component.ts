@@ -9,13 +9,14 @@ import { ActivityService } from 'src/app/services/activity.service';
 })
 export class UserActivitiesComponent implements OnInit {
 
-  displayedColumns: string[] = ['FechaCreacion', 'Usuario', 'Descripcion'];
+  displayedColumns: string[] = ['fechaActividad', 'nombreUsuario', 'detalleActividad'];
   dataSource!: activityDTO[];
 
   constructor(private activityService: ActivityService) { }
 
   ngOnInit(): void {
     this.activityService.GetActivities().subscribe(e => {
+      console.log(e);
       this.dataSource = e;
     });
   }

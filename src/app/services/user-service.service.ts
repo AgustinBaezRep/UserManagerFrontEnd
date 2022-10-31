@@ -17,6 +17,10 @@ export class UserServiceService {
   }
 
   CreateUser(user: UserViewModel): Observable<any> {
-    return this.http.post(`${this.url}/CreateUser`, user)
+    return this.http.post<any>(`${this.url}/CreateUser`, user)
+  }
+
+  RemoveUser(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.url}/DeleteUser/${id}`)
   }
 }

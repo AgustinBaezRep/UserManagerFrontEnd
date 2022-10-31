@@ -1,5 +1,5 @@
 export interface activityDTO {
-    FechaCreacion: Date,
-    Usuario: string,
-    Descripcion: string
+    fechaActividad: Date,
+    nombreUsuario: string,
+    detalleActividad: string
 }

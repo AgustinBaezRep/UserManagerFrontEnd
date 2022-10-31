@@ -21,7 +21,7 @@
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label>Telefono</mat-label>
-            <input matInput formControlName="Telefono">
+            <input type="number" matInput formControlName="Telefono">
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label>Pais</mat-label>
@@ -33,7 +33,7 @@
         </mat-form-field>
         <br>
         <h3>¿Recibir informacion?</h3>
-        <mat-radio-group aria-label="Select an option">
+        <mat-radio-group aria-label="Select an option" formControlName="RecibirInformacion">
             <mat-radio-button value="1">Si</mat-radio-button>
             <mat-radio-button value="0">No</mat-radio-button>
         </mat-radio-group>

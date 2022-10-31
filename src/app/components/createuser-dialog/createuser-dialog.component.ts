@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { countriesViewModel } from 'src/app/models/countriesViewModel';
 import { UserServiceService } from 'src/app/services/user-service.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { UserViewModel } from 'src/app/models/userViewModel';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserDTO } from 'src/app/models/userDTO';
 
 @Component({
   selector: 'app-createuser-dialog',
@@ -20,7 +21,8 @@ export class CreateuserDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<CreateuserDialogComponent>,
     private userService: UserServiceService,
     private _snackBar: MatSnackBar,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) { 
     this.countries = 
     [{id: 1, description: "Argentina"},
@@ -28,11 +30,12 @@ export class CreateuserDialogComponent implements OnInit {
     {id: 3, description: "Brasil"}]
 
     this.form = this.fb.group({
-      Nombre: ['', Validators.required],
-      Apellido: ['', Validators.required],
-      CorreoElectronico: ['', Validators.email],
-      FechaNacimiento: ['', Validators.required],
-      Telefono: ['', Validators.required]
+      Nombre: [data != null ? data.nombre : '', Validators.required],
+      Apellido: [data != null ? data.apellido : '', Validators.required],
+      CorreoElectronico: [data != null ? data.correoElectronico : '', Validators.email],
+      FechaNacimiento: [data != null ? data.fechaNacimiento : '', Validators.required],
+      Telefono: [data != null ? data.telefono : '', Validators.required],
+      RecibirInformacion: [data != null ? data.recibirInformacion : '', Validators.required]
     })
   }
 
@@ -43,20 +46,20 @@ export class CreateuserDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  updateUser() {
+
+  }
+
   createUser() {
-    debugger
     const user: UserViewModel = 
       {Nombre: this.form.value.Nombre,
       Apellido: this.form.value.Apellido,
       CorreoElectronico: this.form.value.CorreoElectronico,
-      FechaNacimiento: this.form.value.Nombre,
-      Telefono: this.form.value.Nombre,
+      FechaNacimiento: this.form.value.FechaNacimiento,
+      Telefono: this.form.value.Telefono,
       IdPaisResidencia: 1,
-      RecibirInformacion: true};
+      RecibirInformacion: this.form.value.RecibirInformacion == 1 ? true : false};
 
-    this.userService.CreateUser(user).subscribe(u => {
-      this._snackBar.open("Creado existosamente");
-      this.dialogRef.close();
-    });
+    this.userService.CreateUser(user).subscribe();
   }
 }
