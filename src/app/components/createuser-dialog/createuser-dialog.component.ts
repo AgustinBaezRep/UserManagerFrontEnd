@@ -16,6 +16,7 @@ export class CreateuserDialogComponent implements OnInit {
 
   countries!: countriesViewModel[];
   form: FormGroup;
+  users!: UserDTO[];
 
   constructor(
     public dialogRef: MatDialogRef<CreateuserDialogComponent>,
@@ -24,42 +25,58 @@ export class CreateuserDialogComponent implements OnInit {
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { 
-    this.countries = 
-    [{id: 1, description: "Argentina"},
-    {id: 2, description: "Costa Rica"},
-    {id: 3, description: "Brasil"}]
-
     this.form = this.fb.group({
       Nombre: [data != null ? data.nombre : '', Validators.required],
       Apellido: [data != null ? data.apellido : '', Validators.required],
       CorreoElectronico: [data != null ? data.correoElectronico : '', Validators.email],
       FechaNacimiento: [data != null ? data.fechaNacimiento : '', Validators.required],
       Telefono: [data != null ? data.telefono : '', Validators.required],
+      //Pais: [data != null ? data.pais : '', Validators.required],
       RecibirInformacion: [data != null ? data.recibirInformacion : '', Validators.required]
     })
   }
 
   ngOnInit(): void {
+    this.userService.GetCountries().subscribe(c => {
+      this.countries = c;
+    })
   }
 
   cancelAction() {
     this.dialogRef.close();
   }
 
-  updateUser() {
+  createUser() {
+    debugger;
+    const user: UserViewModel = 
+      { Id: this.data != null ? this.data.id : null,
+        Nombre: this.form.value.Nombre,
+        Apellido: this.form.value.Apellido,
+        CorreoElectronico: this.form.value.CorreoElectronico,
+        FechaNacimiento: this.form.value.FechaNacimiento,
+        Telefono: this.form.value.Telefono,
+        IdPaisResidencia: 1,
+        RecibirInformacion: this.form.value.RecibirInformacion == 1 ? true : false};
 
+    if (this.data != null) {
+      this.userService.UpdateUser(user).subscribe({
+        next: (e) => {this.createdUserResponse("usuario modificado exitosamente")},
+        error: (err) => {this.createdUserResponse("usuario modificado exitosamente")},
+        complete: () => console.log("complete")});
+    }
+    else {
+      this.userService.CreateUser(user).subscribe({
+        next: (e) => {this.createdUserResponse("usuario creado exitosamente")},
+        error: (err) => {this.createdUserResponse("usuario creado exitosamente")},
+        complete: () => console.log("complete")});
+    }
   }
 
-  createUser() {
-    const user: UserViewModel = 
-      {Nombre: this.form.value.Nombre,
-      Apellido: this.form.value.Apellido,
-      CorreoElectronico: this.form.value.CorreoElectronico,
-      FechaNacimiento: this.form.value.FechaNacimiento,
-      Telefono: this.form.value.Telefono,
-      IdPaisResidencia: 1,
-      RecibirInformacion: this.form.value.RecibirInformacion == 1 ? true : false};
-
-    this.userService.CreateUser(user).subscribe();
+  createdUserResponse(action: string) {
+    this._snackBar.open(action, "X");
+    this.dialogRef.close();
+    this.userService.GetUsers().subscribe(e => {
+      this.users = e;
+    });
   }
 }

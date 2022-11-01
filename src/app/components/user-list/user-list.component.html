@@ -22,7 +22,7 @@
   
     <ng-container matColumnDef="FechaNacimiento">
       <th mat-header-cell *matHeaderCellDef> Fecha de Nacimiento </th>
-      <td mat-cell *matCellDef="let element"> {{element.fechaNacimiento | date:'short'}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.fechaNacimiento | date: 'dd/MM/yyyy'}} </td>
     </ng-container>
   
     <ng-container matColumnDef="Telefono">
@@ -35,16 +35,21 @@
         <td mat-cell *matCellDef="let element"> {{element.paisResidencia}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="RecibirInformacion">
+      <th mat-header-cell *matHeaderCellDef> Recibir Informacion </th>
+      <td mat-cell *matCellDef="let element"> {{element.recibirInformacion}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="Acciones">
         <th mat-header-cell *matHeaderCellDef>
             <button mat-raised-button (click)="openDialogToCreateUser()">Agregar usuario</button>
         </th>
-        <td mat-cell *matCellDef="let element"> 
+        <td mat-cell *matCellDef="let element">
             <button mat-button>
-                <mat-icon (click)="openDialogToUpdateUser(element)">edit</mat-icon>
+                <mat-icon (click)="openDialogToUpdateUser(element)" style="color: grey;">edit</mat-icon>
             </button>
             <button mat-button>
-                <mat-icon (click)="removeUser(element.id)">delete</mat-icon>
+                <mat-icon (click)="removeUser(element.id)" style="color: red;">delete</mat-icon>
             </button>
         </td>
     </ng-container>

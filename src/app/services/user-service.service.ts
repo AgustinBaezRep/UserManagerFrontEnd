@@ -20,7 +20,15 @@ export class UserServiceService {
     return this.http.post<any>(`${this.url}/CreateUser`, user)
   }
 
+  UpdateUser(user: UserViewModel): Observable<any> {
+    return this.http.put<any>(`${this.url}/UpdateUser`, user)
+  }
+
   RemoveUser(id: number): Observable<any> {
     return this.http.delete<any>(`${this.url}/DeleteUser/${id}`)
+  }
+
+  GetCountries(): Observable<any> {
+    return this.http.get<any>(`${this.url}/GetCountries`);
   }
 }

@@ -5,6 +5,7 @@ import { UserDTO } from 'src/app/models/userDTO';
 import { UserServiceService } from 'src/app/services/user-service.service';
 import {MatDialog} from '@angular/material/dialog';
 import { CreateuserDialogComponent } from '../createuser-dialog/createuser-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-list',
@@ -13,12 +14,14 @@ import { CreateuserDialogComponent } from '../createuser-dialog/createuser-dialo
 })
 export class UserListComponent implements OnInit {
 
-  displayedColumns: string[] = ['Id', 'Nombre', 'Apellido', 'CorreoElectronico', 'FechaNacimiento', 'Telefono', 'Pais', 'Acciones'];
+  displayedColumns: string[] = ['Id', 'Nombre', 'Apellido', 'CorreoElectronico', 'FechaNacimiento', 'Telefono', 'Pais', 'RecibirInformacion', 'Acciones'];
   dataSource!: UserDTO[];
+  users!: UserDTO[];
 
   constructor(private router: Router,
               private userService: UserServiceService,
-              public dialog: MatDialog) 
+              public dialog: MatDialog,
+              private _snackBar: MatSnackBar) 
               { }
 
   ngOnInit(): void {
@@ -29,8 +32,10 @@ export class UserListComponent implements OnInit {
   }
 
   removeUser(id: any) {
-    debugger
-    this.userService.RemoveUser(id).subscribe();
+    this.userService.RemoveUser(id).subscribe({
+      next: (e) => {this.removedUserResponse()},
+      error: (err) => {this.removedUserResponse()},
+      complete: () => console.log("complete")});
   }
 
   openDialogToCreateUser(): void {
@@ -43,6 +48,13 @@ export class UserListComponent implements OnInit {
     const dialogRef = this.dialog.open(CreateuserDialogComponent, {
       width: '300px',
       data: user
+    });
+  }
+
+  removedUserResponse() {
+    this._snackBar.open("Usuario eliminado existosamente", "X");
+    this.userService.GetUsers().subscribe(e => {
+      this.users = e;
     });
   }
 }

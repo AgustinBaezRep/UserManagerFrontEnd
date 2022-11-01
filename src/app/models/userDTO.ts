@@ -5,5 +5,6 @@ export interface UserDTO{
     CorreoElectronico: string,
     FechaNacimiento: Date,
     Telefono: number,
-    Pais: string
+    Pais: string,
+    RecibirInformacion: boolean
 }

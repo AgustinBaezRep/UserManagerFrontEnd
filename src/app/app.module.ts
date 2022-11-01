@@ -10,7 +10,6 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { UserActivitiesComponent } from './components/user-activities/user-activities.component';
 import { CreateuserDialogComponent } from './components/createuser-dialog/createuser-dialog.component';
-import { ActivitiesListComponent } from './components/activities-list/activities-list.component';
 
 @NgModule({
   declarations: [
@@ -18,8 +17,7 @@ import { ActivitiesListComponent } from './components/activities-list/activities
     NavBarComponent,
     UserListComponent,
     UserActivitiesComponent,
-    CreateuserDialogComponent,
-    ActivitiesListComponent
+    CreateuserDialogComponent
   ],
   imports: [
     BrowserModule,
