@@ -14,13 +14,19 @@ export class UserActivitiesComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['fechaActividad', 'nombreUsuario', 'detalleActividad'];
   dataSource = new MatTableDataSource<activityDTO[]>;
   @ViewChild(MatSort) sort!: MatSort;
+  noActivities: boolean = false;
 
   constructor(private activityService: ActivityService) { }
 
   ngOnInit(): void {
-    this.activityService.GetActivities().subscribe(e => {
-      this.dataSource = e;
-    });
+    this.getActivities();
+  }
+
+  getActivities() {
+    this.activityService.GetActivities().subscribe({
+      next: (e) => { this.dataSource = e; },
+      error: () => {this.noActivities = true},
+      complete: () => console.log("complete")});
   }
 
   ngAfterViewInit() {

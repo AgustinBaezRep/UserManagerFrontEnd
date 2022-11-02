@@ -10,6 +10,7 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { UserActivitiesComponent } from './components/user-activities/user-activities.component';
 import { CreateuserDialogComponent } from './components/createuser-dialog/createuser-dialog.component';
+import { DeleteuserDialogComponent } from './components/deleteuser-dialog/deleteuser-dialog.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { CreateuserDialogComponent } from './components/createuser-dialog/create
     NavBarComponent,
     UserListComponent,
     UserActivitiesComponent,
-    CreateuserDialogComponent
+    CreateuserDialogComponent,
+    DeleteuserDialogComponent
   ],
   imports: [
     BrowserModule,

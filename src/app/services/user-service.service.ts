@@ -1,19 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserDTO } from '../models/userDTO';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { UserViewModel } from '../models/userViewModel';
+import { environment } from 'src/environments/environment';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserServiceService {
 
-  url: string = "https://localhost:44383/api/User"
+  url: string = `${environment.baseURL}/User`;
   constructor(private http: HttpClient) { }
 
   GetUsers(): Observable<any> {
-    return this.http.get<any>(this.url);
+    return this.http.get<any>(this.url)
   }
 
   CreateUser(user: UserViewModel): Observable<any> {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { UserDTO } from 'src/app/models/userDTO';
@@ -6,6 +6,7 @@ import { UserServiceService } from 'src/app/services/user-service.service';
 import {MatDialog} from '@angular/material/dialog';
 import { CreateuserDialogComponent } from '../createuser-dialog/createuser-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeleteuserDialogComponent } from '../deleteuser-dialog/deleteuser-dialog.component';
 
 @Component({
   selector: 'app-user-list',
@@ -16,7 +17,7 @@ export class UserListComponent implements OnInit {
 
   displayedColumns: string[] = ['Id', 'Nombre', 'Apellido', 'CorreoElectronico', 'FechaNacimiento', 'Telefono', 'Pais', 'RecibirInformacion', 'Acciones'];
   dataSource!: UserDTO[];
-  users!: UserDTO[];
+  noUsers: boolean = false;
 
   constructor(private router: Router,
               private userService: UserServiceService,
@@ -25,17 +26,21 @@ export class UserListComponent implements OnInit {
               { }
 
   ngOnInit(): void {
-    this.userService.GetUsers().subscribe(e => {
-      debugger
-      this.dataSource = e;
-    });
+    this.getUsers();
   }
 
-  removeUser(id: any) {
-    this.userService.RemoveUser(id).subscribe({
-      next: (e) => {this.removedUserResponse()},
-      error: (err) => {this.removedUserResponse()},
+  getUsers() {
+    this.userService.GetUsers().subscribe({
+      next: (e) => { this.dataSource = e; },
+      error: () => {this.noUsers = true},
       complete: () => console.log("complete")});
+  }
+
+  removeUser(userId: number) {
+    const dialogRef = this.dialog.open(DeleteuserDialogComponent, {
+      width: '300px',
+      data: userId
+    });
   }
 
   openDialogToCreateUser(): void {
@@ -48,13 +53,6 @@ export class UserListComponent implements OnInit {
     const dialogRef = this.dialog.open(CreateuserDialogComponent, {
       width: '300px',
       data: user
-    });
-  }
-
-  removedUserResponse() {
-    this._snackBar.open("Usuario eliminado existosamente", "X");
-    this.userService.GetUsers().subscribe(e => {
-      this.users = e;
     });
   }
 }

@@ -26,57 +26,63 @@ export class CreateuserDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { 
     this.form = this.fb.group({
-      Nombre: [data != null ? data.nombre : '', Validators.required],
-      Apellido: [data != null ? data.apellido : '', Validators.required],
-      CorreoElectronico: [data != null ? data.correoElectronico : '', Validators.email],
+      Nombre: [data != null ? data.nombre : '', [Validators.required, Validators.maxLength(250)]],
+      Apellido: [data != null ? data.apellido : '', [Validators.required, Validators.maxLength(250)]],
+      CorreoElectronico: [data != null ? data.correoElectronico : '', [Validators.required, Validators.maxLength(250)]],
       FechaNacimiento: [data != null ? data.fechaNacimiento : '', Validators.required],
-      Telefono: [data != null ? data.telefono : '', Validators.required],
-      //Pais: [data != null ? data.pais : '', Validators.required],
-      RecibirInformacion: [data != null ? data.recibirInformacion : '', Validators.required]
+      Telefono: [data != null ? data.telefono : '', [Validators.maxLength(10)]],
+      Pais: [data != null ? data.pais : '', Validators.required],
+      RecibirInformacion: [data != null ? data.recibirInformacion === true ? 1 : 0 : '', Validators.required]
     })
   }
 
   ngOnInit(): void {
-    this.userService.GetCountries().subscribe(c => {
-      this.countries = c;
-    })
+    this.getCountries();
   }
 
   cancelAction() {
     this.dialogRef.close();
   }
 
+  getCountries() {
+    this.userService.GetCountries().subscribe(c => {
+      this.countries = c;
+    })
+  }
+
   createUser() {
-    debugger;
     const user: UserViewModel = 
       { Id: this.data != null ? this.data.id : null,
         Nombre: this.form.value.Nombre,
         Apellido: this.form.value.Apellido,
         CorreoElectronico: this.form.value.CorreoElectronico,
         FechaNacimiento: this.form.value.FechaNacimiento,
-        Telefono: this.form.value.Telefono,
-        IdPaisResidencia: 1,
+        Telefono: this.form.value.Telefono === "" ? null : this.form.value.Telefono,
+        IdPaisResidencia: this.form.value.Pais,
         RecibirInformacion: this.form.value.RecibirInformacion == 1 ? true : false};
 
     if (this.data != null) {
       this.userService.UpdateUser(user).subscribe({
-        next: (e) => {this.createdUserResponse("usuario modificado exitosamente")},
-        error: (err) => {this.createdUserResponse("usuario modificado exitosamente")},
-        complete: () => console.log("complete")});
+        next: () => {this.createdUserResponse("Usuario modificado de manera exitosa")},
+        error: () => { 
+          alert("Error al modificar el usuario"); 
+          this.dialogRef.close();
+        },
+        complete: () => null});
     }
     else {
       this.userService.CreateUser(user).subscribe({
-        next: (e) => {this.createdUserResponse("usuario creado exitosamente")},
-        error: (err) => {this.createdUserResponse("usuario creado exitosamente")},
-        complete: () => console.log("complete")});
+        next: () => {this.createdUserResponse("Usuario creado de manera exitosa")},
+        error: () => { 
+          alert("Error al crear el usuario"); 
+          this.dialogRef.close();
+        },
+        complete: () => null});
     }
   }
 
   createdUserResponse(action: string) {
     this._snackBar.open(action, "X");
     this.dialogRef.close();
-    this.userService.GetUsers().subscribe(e => {
-      this.users = e;
-    });
   }
 }
